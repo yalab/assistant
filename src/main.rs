@@ -7,3 +7,12 @@ fn main() {
     let api_key = env::var("OPEN_AI_API_KEY").expect("OPEN_AI_API_KEY environment variable is not found.");
     println!("{}", api_key);
 }
+
+fn talk() -> String {
+    format!("talk")
+}
+
+#[test]
+fn talk_test () {
+    assert_eq!("talk", talk())
+}
