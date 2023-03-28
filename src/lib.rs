@@ -1,6 +1,7 @@
 use dotenvy::dotenv;
 use std::env;
-use reqwest::blocking::Client;
+use reqwest::blocking::{Client, Response};
+use reqwest::header::{HeaderMap, HeaderValue};
 
 pub fn api_key() -> String {
     dotenv().ok();
@@ -8,11 +9,16 @@ pub fn api_key() -> String {
     return api_key;
 }
 
-pub fn call_chat_api(api_key: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn call_chat_api(api_key: &str) -> Result<Response, Box<dyn std::error::Error>> {
+    let mut headers = HeaderMap::new();
+    let v = "Bearer ".to_owned() + api_key;
+    headers.insert("Authorization", HeaderValue::from_str(&v).unwrap());
+
     let client = Client::new();
-    let resp = client.get("https://google.com").send()?;
-    println!("{}", api_key);
-    println!("{:#?}", resp.text()?);
-    Ok(())
+    let response = client
+	.get("https://api.openai.com/v1/models")
+	.headers(headers)
+	.send()?;
+    Ok(response)
 }
 
