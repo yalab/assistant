@@ -1,7 +1,7 @@
 use assistant::*;
 
 #[test]
-fn api_key_test () {
+fn api_key_test() {
     assert_eq!(51, api_key().len());
 }
 

@@ -1,7 +1,15 @@
 use dotenvy::dotenv;
 use reqwest::blocking::{Client, Response};
 use reqwest::header::{HeaderMap, HeaderValue};
+use serde::{Deserialize, Serialize};
+use serde_json;
 use std::env;
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
 
 pub fn api_key() -> String {
     dotenv().ok();
@@ -18,5 +26,14 @@ pub fn call_chat_api(api_key: &str) -> Result<Response, Box<dyn std::error::Erro
         .get("https://api.openai.com/v1/models")
         .headers(headers)
         .send()?;
+
+    let point = Point { x: 1, y: 2 };
+
+    let serialized = serde_json::to_string(&point).unwrap();
+    println!("serialized = {}", serialized);
+
+    let deserialized: Point = serde_json::from_str(&serialized).unwrap();
+    println!("deserialized = {:?}", deserialized);
+
     Ok(response)
 }
